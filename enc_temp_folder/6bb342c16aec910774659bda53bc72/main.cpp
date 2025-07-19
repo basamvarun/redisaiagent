@@ -19,12 +19,6 @@ int main(int argc, char* argv[]) {
 	if (argc >= 2) {
 		port = std::stoi(argv[1]);
 	}
-
-	if (redisdatabase::getInstance().load("dump.my_rdb"))
-		std::cout << "Database Loaded From dump.my_rdb\n";
-	else
-		std::cout << "No dump found or load failed; starting with an empty database.\n";
-
 	redisserver server(port);
 
 	//backgrounud dump for 300 ever seconds
@@ -32,10 +26,6 @@ int main(int argc, char* argv[]) {
 		while (true) {
 			std::this_thread::sleep_for(std::chrono::seconds(300));
 			//dump the database
-			if (!redisdatabase::getInstance().dump("dump.my_rdb"))
-				std::cerr << "Error Dumping Database\n";
-			else
-				std::cout << "Database Dumped to dump.my_rdb\n";
 		}
 		});
 	persistanceThread.detach();
