@@ -1,18 +1,33 @@
-
 #ifndef REDIS_SERVER_H
 #define REDIS_SERVER_H
+
 #include <string>
-#include <atomic>
+#include <thread> 
+#include <winsock2.h> 
+#include <ws2tcpip.h> 
+#include <signal.h>
+#pragma comment(lib, "ws2_32.lib") 
+
+
+class redisserver;
+extern redisserver* globalServer;
+
 class redisserver {
 public:
-	redisserver(int port);
-	void run();
-	void shutdown();
-	
+    redisserver(int port);
+    void run();
+    void shutdown();
+
 private:
-	int port;
-	int server_socket;
-	std::atomic<bool> running;
-	
+    int port;
+    SOCKET server_socket; 
+    bool running;
+
+   
+    void setupSignalHandler();
 };
-#endif // !REDIS_SERVER_H
+
+
+void signalHandler(int signum);
+
+#endif 
