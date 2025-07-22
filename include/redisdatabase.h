@@ -1,15 +1,18 @@
 #ifndef REDIS_DATABASE_H
 #define REDIS_DATABASE_H
-#include<string>
-#include<mutex>
-#include<vector>
-#include<chrono>
-#include<unordered_map>
-class redisdatabase {
 
+#include <string>
+#include <mutex>
+#include <vector>
+#include <chrono>
+#include <unordered_map>
+
+class redisdatabase {
 public:
-	static redisdatabase& getInstance();
-	bool flushall();
+    static redisdatabase& getInstance();
+    bool flushall();
+
+    // Key/Value Operations
     void set(const std::string& key, const std::string& value);
     bool get(const std::string& key, std::string& value);
     std::vector<std::string> keys();
@@ -41,19 +44,17 @@ public:
     bool dump(const std::string& filename);
     bool load(const std::string& filename);
 
-
 private:
-	redisdatabase() = default;
-	~redisdatabase() = default;
-	redisdatabase(const redisdatabase&) = delete;
-	redisdatabase& operator=(const redisdatabase&) = delete;
-	std::mutex db_mutex;
-	std::unordered_map<std::string, std::string> kv_store;
-	std::unordered_map<std::string, std::vector<std::string>> list_store;
-	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> hash_store;
-	std::unordered_map<std::string, std::chrono::steady_clock::time_point> expiry_map;
+    redisdatabase() = default;
+    ~redisdatabase() = default;
+    redisdatabase(const redisdatabase&) = delete;
+    redisdatabase& operator=(const redisdatabase&) = delete;
+
+    std::mutex db_mutex;
+    std::unordered_map<std::string, std::string> kv_store;
+    std::unordered_map<std::string, std::vector<std::string>> list_store;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> hash_store;
+    std::unordered_map<std::string, std::chrono::steady_clock::time_point> expiry_map;
 };
-
-
 
 #endif
